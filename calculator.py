@@ -50,7 +50,10 @@ def x_pos(v_0, theta, t):
 def y_pos(v_0, theta, launch_height, t):
     return launch_height+(v_0*np.sin(theta)*t)-((0.5*g)*(t**2))
 
-plt.figure(figsize=(7, 7))
+plt.figure(figsize=(6, 6))
+
+plt.vlines(x=distance, ymin=0, ymax=h)
+plt.vlines(x=distance+w, ymin=0, ymax=h)
 
 while launch_angle <= max_launch_angle:
     while launch_speed <= max_launch_speed:
