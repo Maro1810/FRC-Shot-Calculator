@@ -56,6 +56,10 @@ axes[0].vlines(x=distance, ymin=0, ymax=h)
 axes[0].vlines(x=distance+w, ymin=0, ymax=h)
 axes[0].hlines(y=1.7, xmin=distance, xmax=distance+w)
 
+angles = []
+min_speeds = []
+max_speeds = []
+
 while launch_angle <= max_launch_angle:
 
     speeds = []
@@ -92,13 +96,17 @@ while launch_angle <= max_launch_angle:
         axes[0].plot(x1, y1, color='red')
         axes[0].plot(x2, y2, color='green')
 
-        axes[1].plot(launch_angle, max_velocity, 'o', color='green')
-        axes[1].plot(launch_angle, min_velocity, 'o', color='red')
-
+        angles.append(launch_angle)
+        min_speeds.append(min_velocity)
+        max_speeds.append(max_velocity)
     
     launch_speed = 2.0
 
     launch_angle += 0.5
 
+axes[1].plot(angles, max_speeds, 'o', linestyle="-", color='green')
+axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
+
+plt.fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.3)
 
 plt.show()
