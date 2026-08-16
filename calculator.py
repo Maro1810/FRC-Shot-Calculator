@@ -2,7 +2,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-# width of the hub in meters
+# width of the funnel of the hub in meters
 w = 1.05918
 
 # height of the hub in meters
@@ -12,8 +12,8 @@ h = 1.8288
 g = 9.81
 
 # m/s
-launch_speed = 2.0
-max_launch_speed = 11.0
+launch_speed = 1.0
+max_launch_speed = 13.0
 
 # degrees
 launch_angle = 47.5
@@ -50,29 +50,55 @@ def x_pos(v_0, theta, t):
 def y_pos(v_0, theta, launch_height, t):
     return launch_height+(v_0*np.sin(theta)*t)-((0.5*g)*(t**2))
 
-plt.figure(figsize=(6, 6))
+fig, axes = plt.subplots(1, 2, figsize=(10, 6))
 
-plt.vlines(x=distance, ymin=0, ymax=h)
-plt.vlines(x=distance+w, ymin=0, ymax=h)
+axes[0].vlines(x=distance, ymin=0, ymax=h)
+axes[0].vlines(x=distance+w, ymin=0, ymax=h)
+axes[0].hlines(y=1.7, xmin=distance, xmax=distance+w)
 
 while launch_angle <= max_launch_angle:
+
+    speeds = []
+    times = []
+
     while launch_speed <= max_launch_speed:
 
         inRange = withinRange(launch_speed, np.radians(launch_angle), distance, shooter_height)
 
         if inRange[0]:
+            speeds.append(launch_speed)
+
             t = np.linspace(0, inRange[1], 100)
 
-            x = launch_speed*np.cos(np.radians(launch_angle))*t
-            y = shooter_height+(launch_speed*np.sin(np.radians(launch_angle))*t)-(0.5*g)*(t**2)
+            times.append(t)
 
-            plt.plot(x, y)
+        launch_speed += 0.01
 
-        launch_speed += 0.5
+    speeds = list(dict.fromkeys(speeds))
+    
+    if len(speeds) != 0:     
+        min_velocity = min(speeds)
+        max_velocity = max(speeds)
+
+        min_time = speeds.index(min_velocity)
+        max_time = speeds.index(max_velocity)
+
+        x1 = min_velocity*np.cos(np.radians(launch_angle))*times[min_time]
+        y1 = shooter_height+(min_velocity*np.sin(np.radians(launch_angle))*times[min_time])-(0.5*g)*(times[min_time]**2)
+
+        x2 = max_velocity*np.cos(np.radians(launch_angle))*times[max_time]
+        y2 = shooter_height+(max_velocity*np.sin(np.radians(launch_angle))*times[max_time])-(0.5*g)*(times[max_time]**2)
+
+        axes[0].plot(x1, y1, color='red')
+        axes[0].plot(x2, y2, color='green')
+
+        axes[1].plot(launch_angle, max_velocity, 'o', color='green')
+        axes[1].plot(launch_angle, min_velocity, 'o', color='red')
+
     
     launch_speed = 2.0
 
-    launch_angle += 1
+    launch_angle += 0.5
 
 
 plt.show()
