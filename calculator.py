@@ -22,6 +22,9 @@ max_launch_angle = 85.0
 # m
 distance = 3.0
 
+# m
+margin = 0.2
+
 # m (not sure what this is yet, have to change)
 shooter_height = 0.4
 
@@ -38,7 +41,7 @@ def withinRange(v_0, theta, d, launch_height):
 
     x_position = x_pos(v_0, theta, t_0)
 
-    return (x_position >= d and x_position <= d+w), t_0
+    return (x_position >= (d+margin) and x_position <= d+w), t_0
 
 # calculates the x-position using kinematics
 # v_0 is launch velocity, theta is launch angle in radians, t is time
@@ -103,6 +106,13 @@ while launch_angle <= max_launch_angle:
     launch_speed = 2.0
 
     launch_angle += 0.5
+
+# coefficients = np.polyfit(angles, max_speeds, 2)
+
+# x_vals = np.linspace(47.5, 85, 100)
+# y_vals = np.polyval(coefficients, x_vals)
+
+# axes[1].plot(x_vals, y_vals)
 
 axes[1].plot(angles, max_speeds, 'o', linestyle="-", color='green')
 axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
