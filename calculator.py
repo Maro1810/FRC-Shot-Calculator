@@ -207,11 +207,7 @@ axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
 
 val = withinRange(optimal_speed, np.radians(optimal_angle), distance, shooter_height)[1]
 
-print(optimal_angle, optimal_speed)
-
 t = np.linspace(0, val, 100)
-
-print(val)
 
 x_optimal = optimal_speed*np.cos(np.radians(optimal_angle))*t
 y_optimal = shooter_height+(optimal_speed)*np.sin(np.radians(optimal_angle))*t+(-0.5*g)*(t**2)
