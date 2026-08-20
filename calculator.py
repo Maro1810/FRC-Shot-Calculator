@@ -1,6 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 # width of the funnel of the hub in meters
 w = 1.05918
@@ -13,20 +14,28 @@ g = 9.81
 
 # m/s
 launch_speed = 1.0
-max_launch_speed = 13.0
+max_launch_speed = 10.0
 
 # degrees
 launch_angle = 47.5
 max_launch_angle = 85.0
 
-# m
-distance = 3.0
+# m 
+distance = 3
 
 # m
-margin = 0.2
+front_clearance = 0.2
+
+# m
+back_clearance = 0.05
+
+# m
+top_clearance = 0.16
 
 # m (not sure what this is yet, have to change)
 shooter_height = 0.4
+
+plt.style.use('dark_background')
 
 # calculates whether the trajectory will allow for the ball to make it into the hub
 # v_0 is the launch velocity, theta is the launch angle in radians, d is the distance from the front of the hub,
@@ -38,10 +47,13 @@ def withinRange(v_0, theta, d, launch_height):
         return False, None
     
     t_0 = (v_0*np.sin(theta)+np.sqrt(discriminant))/(g)
+    t_1 = (distance)/(v_0*np.cos(theta))
+
+    y_height = y_pos(v_0, theta, launch_height, t_1)
 
     x_position = x_pos(v_0, theta, t_0)
 
-    return (x_position >= (d+margin) and x_position <= d+w), t_0
+    return (x_position >= (d+front_clearance) and x_position <= (d+w)-back_clearance and y_height >= (h+top_clearance)), t_0
 
 # calculates the x-position using kinematics
 # v_0 is launch velocity, theta is launch angle in radians, t is time
@@ -80,8 +92,6 @@ while launch_angle <= max_launch_angle:
             times.append(t)
 
         launch_speed += 0.01
-
-    speeds = list(dict.fromkeys(speeds))
     
     if len(speeds) != 0:     
         min_velocity = min(speeds)
@@ -96,8 +106,8 @@ while launch_angle <= max_launch_angle:
         x2 = max_velocity*np.cos(np.radians(launch_angle))*times[max_time]
         y2 = shooter_height+(max_velocity*np.sin(np.radians(launch_angle))*times[max_time])-(0.5*g)*(times[max_time]**2)
 
-        axes[0].plot(x1, y1, color='red')
-        axes[0].plot(x2, y2, color='green')
+        axes[0].plot(x1, y1, color='red', linewidth=0.3)
+        axes[0].plot(x2, y2, color='green', linewidth=0.3)
 
         angles.append(launch_angle)
         min_speeds.append(min_velocity)
@@ -107,16 +117,107 @@ while launch_angle <= max_launch_angle:
 
     launch_angle += 0.5
 
-# coefficients = np.polyfit(angles, max_speeds, 2)
+upper_coeff = np.polyfit(angles, max_speeds, 4)
 
 # x_vals = np.linspace(47.5, 85, 100)
-# y_vals = np.polyval(coefficients, x_vals)
+# y_vals = np.polyval(upper_coeff, x_vals)
 
 # axes[1].plot(x_vals, y_vals)
+
+lower_coeff = np.polyfit(angles, min_speeds, 4)
+
+# x_vals2 = np.linspace(47.5, 85, 100)
+# y_vals2 = np.polyval(lower_coeff, x_vals2)
+
+# axes[1].plot(x_vals2, y_vals2)
+
+difference = upper_coeff-lower_coeff
+
+def upper_bound(x):
+    return upper_coeff[0]*(x**4)+upper_coeff[1]*(x**3)+upper_coeff[2]*(x**2)+upper_coeff[3]*(x)+upper_coeff[4]
+
+def lower_bound(x):
+    return lower_coeff[0]*(x**4)+lower_coeff[1]*(x**3)+lower_coeff[2]*(x**2)+lower_coeff[3]*(x)+lower_coeff[4]
+
+def difference_func(x):
+    return difference[0]*(x**4)+difference[1]*(x**3)+difference[2]*(x**2)+difference[3]*(x)+difference[4]
+
+max = -10000
+optimal_angle = 47.5
+
+counter = 47.5
+
+while (counter <= 85):
+    if (difference_func(counter) > max):
+        max = difference_func(counter)
+        optimal_angle = counter
+
+    counter += 0.1
+
+curr = lower_bound(optimal_angle)
+vertical_upper = upper_bound(optimal_angle)
+
+horiz = ((vertical_upper-curr)/2)+curr
+
+max_2 = -10000
+optimal_speed = horiz
+
+# code for figuring out the max horizontal error given the constraint of the y-values 
+# of the maximum vertical error
+
+# while (curr <= vertical_upper):
+#     upper_coeff_copy = upper_coeff
+#     upper_coeff_copy[4] = upper_coeff[4]-curr
+
+#     lower_coeff_copy = lower_coeff
+#     lower_coeff_copy[4] = lower_coeff[4]-curr
+
+#     left_answers = np.roots(upper_coeff_copy)
+#     right_answers = np.roots(lower_coeff_copy)
+
+#     for i in range(len(left_answers)):
+#         if np.imag(left_answers[i]) != 0:
+#             left_answers[i] = 0
+
+#         else:
+#             left_answers[i] = np.real(left_answers[i])
+
+#         if np.imag(right_answers[i]) != 0:
+#             right_answers[i] = 0
+
+#         else:
+#             left_answers[i] = np.real(left_answers[i])
+
+#     left_bound = np.max(left_answers)
+#     right_bound = np.max(right_answers)
+
+#     difference = right_bound - left_bound
+
+#     if difference > max_2:
+#         max_2 = difference
+#         optimal_speed = curr
+
+#     curr += 0.1
+
+axes[1].vlines(x=optimal_angle, ymin=5, ymax=15)
+axes[1].hlines(y=horiz, xmin=60, xmax=90)
 
 axes[1].plot(angles, max_speeds, 'o', linestyle="-", color='green')
 axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
 
-plt.fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.3)
+val = withinRange(optimal_speed, np.radians(optimal_angle), distance, shooter_height)[1]
+
+print(optimal_angle, optimal_speed)
+
+t = np.linspace(0, val, 100)
+
+print(val)
+
+x_optimal = optimal_speed*np.cos(np.radians(optimal_angle))*t
+y_optimal = shooter_height+(optimal_speed)*np.sin(np.radians(optimal_angle))*t+(-0.5*g)*(t**2)
+
+axes[0].plot(x_optimal, y_optimal, linewidth=3, color='blue')
+
+plt.fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.8)
 
 plt.show()
