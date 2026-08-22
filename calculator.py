@@ -1,7 +1,6 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 # width of the funnel of the hub in meters
 w = 1.05918
@@ -14,7 +13,7 @@ g = 9.81
 
 # m/s
 launch_speed = 1.0
-max_launch_speed = 10.0
+max_launch_speed = 12
 
 # degrees
 launch_angle = 47.5
@@ -113,7 +112,7 @@ while launch_angle <= max_launch_angle:
         min_speeds.append(min_velocity)
         max_speeds.append(max_velocity)
     
-    launch_speed = 2.0
+    launch_speed = 1.0
 
     launch_angle += 0.5
 
@@ -162,43 +161,6 @@ horiz = ((vertical_upper-curr)/2)+curr
 max_2 = -10000
 optimal_speed = horiz
 
-# code for figuring out the max horizontal error given the constraint of the y-values 
-# of the maximum vertical error
-
-# while (curr <= vertical_upper):
-#     upper_coeff_copy = upper_coeff
-#     upper_coeff_copy[4] = upper_coeff[4]-curr
-
-#     lower_coeff_copy = lower_coeff
-#     lower_coeff_copy[4] = lower_coeff[4]-curr
-
-#     left_answers = np.roots(upper_coeff_copy)
-#     right_answers = np.roots(lower_coeff_copy)
-
-#     for i in range(len(left_answers)):
-#         if np.imag(left_answers[i]) != 0:
-#             left_answers[i] = 0
-
-#         else:
-#             left_answers[i] = np.real(left_answers[i])
-
-#         if np.imag(right_answers[i]) != 0:
-#             right_answers[i] = 0
-
-#         else:
-#             left_answers[i] = np.real(left_answers[i])
-
-#     left_bound = np.max(left_answers)
-#     right_bound = np.max(right_answers)
-
-#     difference = right_bound - left_bound
-
-#     if difference > max_2:
-#         max_2 = difference
-#         optimal_speed = curr
-
-#     curr += 0.1
-
 axes[1].vlines(x=optimal_angle, ymin=5, ymax=15)
 axes[1].hlines(y=horiz, xmin=60, xmax=90)
 
@@ -208,6 +170,8 @@ axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
 val = withinRange(optimal_speed, np.radians(optimal_angle), distance, shooter_height)[1]
 
 t = np.linspace(0, val, 100)
+
+print(val)
 
 x_optimal = optimal_speed*np.cos(np.radians(optimal_angle))*t
 y_optimal = shooter_height+(optimal_speed)*np.sin(np.radians(optimal_angle))*t+(-0.5*g)*(t**2)
