@@ -36,6 +36,9 @@ shooter_height = 0.4
 
 plt.style.use('dark_background')
 
+def sec(theta):
+    return 1/(np.cos(theta))
+
 # calculates whether the trajectory will allow for the ball to make it into the hub
 # v_0 is the launch velocity, theta is the launch angle in radians, d is the distance from the front of the hub,
 # and launch height is the height the fuel is launched at (this is constant but im not sure what this is currently)
@@ -63,6 +66,18 @@ def x_pos(v_0, theta, t):
 # v_0 is launch velocity, theta is launch angle in radians, launch_height is the launch height (lol), t is time
 def y_pos(v_0, theta, launch_height, t):
     return launch_height+(v_0*np.sin(theta)*t)-((0.5*g)*(t**2))
+
+def dxdv(x, v, theta):
+    numerator = -g*(x**2)*sec(theta)
+    denominator = (v**3)*(np.tan(theta))-(x*g*v*sec(theta))
+
+    return numerator/denominator
+
+def dxd0(x, v, theta):
+    numerator = (g*(x**2))*(sec(theta)*np.tan(theta))-2*(v**2)*(x)*(sec(theta)**2)
+    denominator = (2*(v**2)*np.tan(theta))-(2*x*g*sec(theta))
+
+    return numerator/denominator
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 6))
 
