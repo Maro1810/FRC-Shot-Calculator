@@ -94,12 +94,12 @@ def dx(x, v, theta):
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 6))
 
-def calculate_shot(current_distance):
+def calculate_shot(current_distance, prev_angle=None):
     launch_speed = 1.0
     max_launch_speed = 12
 
-    launch_angle = 65
-    max_launch_angle = 75
+    launch_angle = 55
+    max_launch_angle = 84
 
     axes[0].vlines(x=current_distance, ymin=0, ymax=h)
     axes[0].vlines(x=current_distance+w, ymin=0, ymax=h)
@@ -241,6 +241,10 @@ def calculate_shot(current_distance):
 
                 score = (vel_error_weight*velocity_margin_score)+(dx_weight*clearance_score)+(tof_weight*tof_score)
 
+                if prev_angle is not None:
+                    jump_penalty = 0.01 * abs(launch_angle - prev_angle)
+                    score -= jump_penalty
+
                 if score > max_score:
                     max_score = score
                     score_speed = launch_speed
@@ -266,17 +270,21 @@ def calculate_shot(current_distance):
 
     # axes[1].fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.8)
 
-    return f"distance: {current_distance} m \nangle: {score_angle} deg \nspeed: {round(score_speed, 3)} m/s\n"
+    return f"distance: {current_distance} m \nangle: {score_angle} deg \nspeed: {round(score_speed, 3)} m/s\n", score_angle
 
 j = 1
+
+previous_angle = None
 
 while (j <= 6):
     if j == 1:
         with open("shots.txt", "w", encoding="utf-8") as file:
-            file.write(calculate_shot(j))
+            file.write(calculate_shot(j)[0])
+            previous_angle = calculate_shot(j)[1]
     else:
         with open("shots.txt", "a", encoding="utf-8") as file:
-            file.write("\n" + calculate_shot(j))
+            file.write("\n" + calculate_shot(j, previous_angle)[0])
+            previous_angle = calculate_shot(j, previous_angle)[1]
 
     j += 0.1
 
