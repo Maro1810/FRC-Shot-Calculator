@@ -1,6 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Button, Slider
 
 # width of the funnel of the hub in meters
 w = 1.05918
@@ -94,6 +95,16 @@ def dx(x, v, theta):
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 6))
 
+axdistance = fig.add_axes((0.25, 0.05, 0.65, 0.03))
+
+distance_slider = Slider(
+    ax=axdistance,
+    label='Distance',
+    valmin=1,
+    valmax=6,
+    valinit=1,
+)
+
 def calculate_shot(current_distance, prev_angle=None):
     launch_speed = 1.0
     max_launch_speed = 12
@@ -101,9 +112,9 @@ def calculate_shot(current_distance, prev_angle=None):
     launch_angle = 55
     max_launch_angle = 84
 
-    axes[0].vlines(x=current_distance, ymin=0, ymax=h)
-    axes[0].vlines(x=current_distance+w, ymin=0, ymax=h)
-    axes[0].hlines(y=1.7, xmin=current_distance, xmax=current_distance+w)
+    # axes[0].vlines(x=current_distance, ymin=0, ymax=h)
+    # axes[0].vlines(x=current_distance+w, ymin=0, ymax=h)
+    # axes[0].hlines(y=1.7, xmin=current_distance, xmax=current_distance+w)
 
     angles = []
     min_speeds = []
@@ -256,26 +267,47 @@ def calculate_shot(current_distance, prev_angle=None):
     x_optimal3 = score_speed*np.cos(np.radians(score_angle))*t
     y_optimal3 = shooter_height+(score_speed)*np.sin(np.radians(score_angle))*t+(-0.5*g)*(t**2)
 
-    axes[0].plot(x_optimal3, y_optimal3, linewidth=3, color='yellow')
+    # axes[0].plot(x_optimal3, y_optimal3, linewidth=3, color='yellow')
 
     # axes[1].fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.8)
 
-    return f"distance: {current_distance} m \nangle: {score_angle} deg \nspeed: {round(score_speed, 3)} m/s\n", score_angle
+    return f"distance: {current_distance} m \nangle: {score_angle} deg \nspeed: {round(score_speed, 3)} m/s\n", score_angle, score_speed
 
 j = 1
 
-previous_angle = None
+distances = []
+speeds = []
+angles = []
+
+def update(val):
+    return 0
 
 while (j <= 6):
+
+    distances.append(round(j, 3))
+
     if j == 1:
         with open("shots.txt", "w", encoding="utf-8") as file:
             file.write(calculate_shot(round(j, 3))[0])
+
+            angles.append(calculate_shot(round(j, 3))[1])
+            speeds.append(calculate_shot(round(j, 3))[2])
+
             previous_angle = calculate_shot(round(j, 3))[1]
+
     else:
         with open("shots.txt", "a", encoding="utf-8") as file:
             file.write("\n" + calculate_shot(round(j, 3), previous_angle)[0])
+
+            angles.append(calculate_shot(round(j, 3), previous_angle)[1])
+            speeds.append(calculate_shot(round(j, 3), previous_angle)[2])
+            
             previous_angle = calculate_shot(round(j, 3), previous_angle)[1]
 
     j += 0.1
+
+print(distances)
+print(angles)
+print(distances)
 
 plt.show()
