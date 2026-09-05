@@ -279,12 +279,12 @@ previous_angle = None
 while (j <= 6):
     if j == 1:
         with open("shots.txt", "w", encoding="utf-8") as file:
-            file.write(calculate_shot(j)[0])
-            previous_angle = calculate_shot(j)[1]
+            file.write(calculate_shot(round(j, 3))[0])
+            previous_angle = calculate_shot(round(j, 3))[1]
     else:
         with open("shots.txt", "a", encoding="utf-8") as file:
-            file.write("\n" + calculate_shot(j, previous_angle)[0])
-            previous_angle = calculate_shot(j, previous_angle)[1]
+            file.write("\n" + calculate_shot(round(j, 3), previous_angle)[0])
+            previous_angle = calculate_shot(round(j, 3), previous_angle)[1]
 
     j += 0.1
 
