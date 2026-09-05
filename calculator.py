@@ -20,13 +20,13 @@ launch_angle = 47.5
 max_launch_angle = 85.0
 
 # m 
-distance = 2
+distance = 4
 
 # m
-front_clearance = 0.2
+front_clearance = 0.45
 
 # m
-back_clearance = 0.05
+back_clearance = 0.15
 
 # m
 top_clearance = 0.16
@@ -40,9 +40,9 @@ velocity_uncertainty = 0.1
 # +/- x radians
 angle_uncertainty = 0.017
 
-vel_error_weight = 0.05
-dx_weight = 0.9
-tof_weight = 0.05
+vel_error_weight = 0.5
+dx_weight = 0.3
+tof_weight = 0.2
 
 plt.style.use('dark_background')
 
@@ -129,7 +129,12 @@ while launch_angle <= max_launch_angle:
             m1 = inRange[2] - distance
             m2 = (distance+w) - inRange[2]
             
-            worst_case = min(m1, m2) - curr_dx
+            clearance = min(m1, m2) - curr_dx
+
+            # hub_center = distance + (w / 2.0)
+            # dist_from_center = np.abs(inRange[2] - hub_center)
+
+            # clearance = (w / 2.0) - dist_from_center - curr_dx
 
             if (inRange[1] < min_tof):
                 min_tof = inRange[1]
@@ -137,11 +142,11 @@ while launch_angle <= max_launch_angle:
             if (inRange[1] > max_tof):
                 max_tof = inRange[1]
 
-            if (worst_case < min_clearance):
-                min_clearance = worst_case
+            if (clearance < min_clearance):
+                min_clearance = clearance
                 
-            if (worst_case > max_clearance):
-                max_clearance = worst_case
+            if (clearance > max_clearance):
+                max_clearance = clearance
 
         launch_speed += 0.01
     
@@ -217,6 +222,11 @@ while launch_angle <= max_launch_angle:
             m2 = (distance+w) - inRange[2]
             
             clearance = min(m1, m2) - curr_dx
+
+            # hub_center = distance + (w / 2.0)
+            # dist_from_center = np.abs(inRange[2] - hub_center)
+            
+            # clearance = (w / 2.0) - dist_from_center - curr_dx
 
             velocity_margin_score = (difference_func(launch_angle)-min_margin)/(max_margin-min_margin)
             clearance_score = (clearance-min_clearance)/(max_clearance-min_clearance)
