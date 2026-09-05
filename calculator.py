@@ -40,9 +40,9 @@ velocity_uncertainty = 0.1
 # +/- x radians
 angle_uncertainty = 0.017
 
-vel_error_weight = 0.7
-dx_weight = 0.1
-tof_weight = 0.2
+vel_error_weight = 0.05
+dx_weight = 0.9
+tof_weight = 0.05
 
 plt.style.use('dark_background')
 
@@ -102,9 +102,6 @@ angles = []
 min_speeds = []
 max_speeds = []
 
-opt_ang_tof = 0
-opt_speed_tof = 0
-
 min_tof = 10000000
 max_tof = -1000000
 
@@ -136,8 +133,6 @@ while launch_angle <= max_launch_angle:
 
             if (inRange[1] < min_tof):
                 min_tof = inRange[1]
-                opt_ang_tof = launch_angle
-                opt_speed_tof = launch_speed
 
             if (inRange[1] > max_tof):
                 max_tof = inRange[1]
@@ -176,17 +171,7 @@ while launch_angle <= max_launch_angle:
 
 upper_coeff = np.polyfit(angles, max_speeds, 4)
 
-# x_vals = np.linspace(47.5, 85, 100)
-# y_vals = np.polyval(upper_coeff, x_vals)
-
-# axes[1].plot(x_vals, y_vals)
-
 lower_coeff = np.polyfit(angles, min_speeds, 4)
-
-# x_vals2 = np.linspace(47.5, 85, 100)
-# y_vals2 = np.polyval(lower_coeff, x_vals2)
-
-# axes[1].plot(x_vals2, y_vals2)
 
 difference = upper_coeff-lower_coeff
 
@@ -201,106 +186,66 @@ def difference_func(x):
 
 max_margin = -10000
 min_margin = 10000
-optimal_angle = min(angles)
 
 launch_speed = 1.0
-launch_angle = 47.5
+launch_angle = min(angles)
 
-counter = optimal_angle
-
-potential_angles = []
-potential_speeds = []
+counter = min(angles)
 
 while (counter <= 85):
-    potential_angles.append(counter)
-
-    curr = lower_bound(counter)
-    vertical_upper = upper_bound(counter)
-
-    potential_speeds.append(((vertical_upper-curr)/2)+curr)
 
     if (difference_func(counter) > max_margin):
         max_margin = difference_func(counter)
-        optimal_angle = counter
 
     if (difference_func(counter) < min_margin):
         min_margin = difference_func(counter)
 
     counter += 0.1
 
+max_score = -100000
+score_speed = 0
+score_angle = 0
+
 while launch_angle <= max_launch_angle:
     while launch_speed <= max_launch_speed:
         inRange = withinRange(launch_speed, np.radians(launch_angle), distance, shooter_height)
         
         if inRange[0]:
-            clearance_score = (difference_func(launch_angle)-min_clearance)/(max_clearance-min_clearance)
-            velocity_margin_score = ()
+            curr_dx = dx(inRange[2], launch_speed, np.radians(launch_angle))
+            
+            m1 = inRange[2] - distance
+            m2 = (distance+w) - inRange[2]
+            
+            clearance = min(m1, m2) - curr_dx
 
-max_case = -1000000000
+            velocity_margin_score = (difference_func(launch_angle)-min_margin)/(max_margin-min_margin)
+            clearance_score = (clearance-min_clearance)/(max_clearance-min_clearance)
+            tof_score = (max_tof-inRange[1])/(max_tof-min_tof)
 
-opt_ang_dx = 0
-opt_speed_dx = 0
+            score = (vel_error_weight*velocity_margin_score)+(dx_weight*clearance_score)+(tof_weight*tof_score)
 
-for i in range(len(potential_speeds)):
-    inRange = withinRange(potential_speeds[i], np.radians(potential_angles[i]), distance, shooter_height)
+            if score > max_score:
+                max_score = score
+                score_speed = launch_speed
+                score_angle = launch_angle
 
-    curr_dx = dx(inRange[2], potential_speeds[i], np.radians(potential_angles[i]))
+        launch_speed += 0.01
 
-    m1 = inRange[2] - distance
-    m2 = (distance+w) - inRange[2]
+    launch_speed = 1.0
 
-    worst_case = min(m1, m2) - curr_dx
-
-    if (worst_case > max_case):
-        max_case = worst_case
-        
-        opt_ang_dx = potential_angles[i]
-        opt_speed_dx = potential_speeds[i]
-
-curr = lower_bound(optimal_angle)
-vertical_upper = upper_bound(optimal_angle)
-
-horiz = ((vertical_upper-curr)/2)+curr
-
-max_2 = -10000
-optimal_speed = horiz
-
-axes[1].vlines(x=optimal_angle, ymin=5, ymax=15)
-axes[1].hlines(y=horiz, xmin=60, xmax=90)
+    launch_angle += 0.5
 
 axes[1].plot(angles, max_speeds, 'o', linestyle="-", color='green')
 axes[1].plot(angles, min_speeds, 'o', linestyle="-", color='red')
 
-val = withinRange(optimal_speed, np.radians(optimal_angle), distance, shooter_height)[1]
-val2 = withinRange(opt_speed_dx, np.radians(opt_ang_dx), distance, shooter_height)[1]
-val3 = withinRange(opt_speed_tof, np.radians(opt_ang_tof), distance, shooter_height)[1]
+val = withinRange(score_speed, np.radians(score_angle), distance, shooter_height)[1]
 
 t = np.linspace(0, val, 100)
-t2 = np.linspace(0, val2, 100)
-t3 = np.linspace(0, val3, 100)
 
-x_optimal = optimal_speed*np.cos(np.radians(optimal_angle))*t
-y_optimal = shooter_height+(optimal_speed)*np.sin(np.radians(optimal_angle))*t+(-0.5*g)*(t**2)
+x_optimal3 = score_speed*np.cos(np.radians(score_angle))*t
+y_optimal3 = shooter_height+(score_speed)*np.sin(np.radians(score_angle))*t+(-0.5*g)*(t**2)
 
-x_optimal2 = opt_speed_dx*np.cos(np.radians(opt_ang_dx))*t2
-y_optimal2 = shooter_height+(opt_speed_dx)*np.sin(np.radians(opt_ang_dx))*t2+(-0.5*g)*(t2**2)
-
-x_tof = opt_speed_tof*np.cos(np.radians(opt_ang_tof))*t3
-y_tof = shooter_height+(opt_speed_tof)*np.sin(np.radians(opt_ang_tof))*t3+(-0.5*g)*(t3**2)
-
-axes[0].plot(x_optimal, y_optimal, linewidth=3, color='blue')
-axes[0].plot(x_optimal2, y_optimal2, linewidth=3, color='orange')
-axes[0].plot(x_tof, y_tof, linewidth=3, color='yellow')
-
-axes[1].plot(opt_ang_dx, opt_speed_dx, color='orange', marker='o')
-
-# print(opt_ang_dx, opt_speed_dx)
-
-# print(min_tof)
-# print(max_tof)
-
-# print(min_clearance)
-# print(max_clearance)
+axes[0].plot(x_optimal3, y_optimal3, linewidth=3, color='yellow')
 
 plt.fill_between(angles, min_speeds, max_speeds, color='purple', alpha=0.8)
 
