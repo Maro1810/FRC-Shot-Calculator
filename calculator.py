@@ -138,11 +138,6 @@ def calculate_shot(current_distance, prev_angle=None):
             
                 clearance = min(m1, m2) - curr_dx
 
-                # hub_center = distance + (w / 2.0)
-                # dist_from_center = np.abs(inRange[2] - hub_center)
-
-                # clearance = (w / 2.0) - dist_from_center - curr_dx
-
                 if (inRange[1] < min_tof):
                     min_tof = inRange[1]
 
@@ -229,11 +224,6 @@ def calculate_shot(current_distance, prev_angle=None):
                 m2 = (current_distance+w) - inRange[2]
             
                 clearance = min(m1, m2) - curr_dx
-
-                # hub_center = distance + (w / 2.0)
-                # dist_from_center = np.abs(inRange[2] - hub_center)
-            
-                # clearance = (w / 2.0) - dist_from_center - curr_dx
 
                 velocity_margin_score = (difference_func(launch_angle)-min_margin)/(max_margin-min_margin)
                 clearance_score = (clearance-min_clearance)/(max_clearance-min_clearance)
