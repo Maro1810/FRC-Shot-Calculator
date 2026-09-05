@@ -178,7 +178,7 @@ def calculate_shot(current_distance, prev_angle=None):
 
             # axes[0].plot(x1, y1, color='red', linewidth=0.3)
             # axes[0].plot(x2, y2, color='green', linewidth=0.3)
-# 
+
             angles.append(launch_angle)
             min_speeds.append(min_velocity)
             max_speeds.append(max_velocity)
@@ -279,9 +279,6 @@ distances = []
 speeds = []
 angles = []
 
-def update(val):
-    return 0
-
 while (j <= 6):
 
     distances.append(round(j, 3))
@@ -306,8 +303,41 @@ while (j <= 6):
 
     j += 0.1
 
-print(distances)
-print(angles)
-print(distances)
+angle_poly = np.polyfit(distances, angles, 2)
+
+speed_poly = np.polyfit(distances, speeds, 2)
+
+distance_vals = np.linspace(1, 6, 100)
+
+angle_vals = np.polyval(angle_poly, distance_vals)
+speed_vals = np.polyval(speed_poly, distance_vals)
+
+axes[1].plot(distance_vals, angle_vals, color='blue')
+axes[1].plot(distance_vals, speed_vals, color='orange')
+
+axes[0].vlines(x=1, ymin=0, ymax=h)
+axes[0].vlines(x=1+w, ymin=0, ymax=h)
+axes[0].hlines(y=1.7, xmin=1, xmax=1+w)
+
+def update(val):
+    axes[0].clear()
+
+    axes[0].vlines(x=distance_slider.val, ymin=0, ymax=h)
+    axes[0].vlines(x=distance_slider.val+w, ymin=0, ymax=h)
+    axes[0].hlines(y=1.7, xmin=distance_slider.val, xmax=distance_slider.val+w)
+
+    angle_val = np.polyval(angle_poly, distance_slider.val)
+    speed_val = np.polyval(speed_poly, distance_slider.val)
+    
+    val = withinRange(speed_val, np.radians(angle_val), distance_slider.val, shooter_height)[1]
+
+    t = np.linspace(0, val, 100)
+
+    x_optimal = speed_val*np.cos(np.radians(angle_val))*t
+    y_optimal = shooter_height+(speed_val)*np.sin(np.radians(angle_val))*t+(-0.5*g)*(t**2)
+
+    axes[0].plot(x_optimal, y_optimal)
+
+distance_slider.on_changed(update)
 
 plt.show()
