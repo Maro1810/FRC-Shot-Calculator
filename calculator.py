@@ -109,7 +109,7 @@ def calculate_shot(current_distance, prev_angle=None):
     launch_speed = 1.0
     max_launch_speed = 12
 
-    launch_angle = 55
+    launch_angle = 50
     max_launch_angle = 84
 
     # axes[0].vlines(x=current_distance, ymin=0, ymax=h)
@@ -339,5 +339,9 @@ def update(val):
     axes[0].plot(x_optimal, y_optimal)
 
 distance_slider.on_changed(update)
+
+with open("shots.txt", "a", encoding="utf-8") as file:
+    file.write(f"angle vs distance: {angle_poly[0]}x^2+{angle_poly[1]}x+{angle_poly[2]}")
+    file.write(f"\nvelocity vs distance: {speed_poly[0]}x^2+{speed_poly[1]}x+{speed_poly[2]}")
 
 plt.show()
