@@ -1,205 +1,205 @@
 distance: 1 m 
-angle: 82.5 deg 
-speed: 8.13 m/s
+angle: 82.0 deg 
+speed: 7.87 m/s
 
 distance: 1.1 m 
-angle: 82.5 deg 
-speed: 8.35 m/s
+angle: 82.0 deg 
+speed: 8.09 m/s
 
 distance: 1.2 m 
-angle: 82.5 deg 
-speed: 8.57 m/s
+angle: 82.0 deg 
+speed: 8.3 m/s
 
 distance: 1.3 m 
-angle: 82.5 deg 
-speed: 8.79 m/s
+angle: 82.0 deg 
+speed: 8.51 m/s
 
 distance: 1.4 m 
-angle: 82.5 deg 
-speed: 9.0 m/s
+angle: 82.0 deg 
+speed: 8.72 m/s
 
 distance: 1.5 m 
-angle: 82.5 deg 
-speed: 9.21 m/s
+angle: 82.0 deg 
+speed: 8.92 m/s
 
 distance: 1.6 m 
-angle: 82.5 deg 
-speed: 9.41 m/s
+angle: 82.0 deg 
+speed: 9.11 m/s
 
 distance: 1.7 m 
-angle: 82.5 deg 
-speed: 9.61 m/s
+angle: 82.0 deg 
+speed: 9.3 m/s
 
 distance: 1.8 m 
-angle: 82.5 deg 
-speed: 9.8 m/s
+angle: 82.0 deg 
+speed: 9.49 m/s
 
 distance: 1.9 m 
-angle: 82.5 deg 
-speed: 9.99 m/s
+angle: 82.0 deg 
+speed: 9.67 m/s
 
 distance: 2.0 m 
-angle: 82.5 deg 
-speed: 10.18 m/s
+angle: 82.0 deg 
+speed: 9.86 m/s
 
 distance: 2.1 m 
 angle: 81.5 deg 
-speed: 9.8 m/s
+speed: 9.77 m/s
 
 distance: 2.2 m 
 angle: 80.5 deg 
-speed: 9.49 m/s
+speed: 9.46 m/s
 
 distance: 2.3 m 
-angle: 79.5 deg 
-speed: 9.24 m/s
+angle: 80.0 deg 
+speed: 9.4 m/s
 
 distance: 2.4 m 
-angle: 78.5 deg 
-speed: 9.04 m/s
-
-distance: 2.5 m 
-angle: 78.5 deg 
+angle: 79.0 deg 
 speed: 9.17 m/s
 
-distance: 2.6 m 
-angle: 78.5 deg 
+distance: 2.5 m 
+angle: 79.0 deg 
 speed: 9.31 m/s
 
+distance: 2.6 m 
+angle: 79.0 deg 
+speed: 9.45 m/s
+
 distance: 2.7 m 
-angle: 78.5 deg 
-speed: 9.44 m/s
+angle: 79.0 deg 
+speed: 9.58 m/s
 
 distance: 2.8 m 
-angle: 78.5 deg 
-speed: 9.57 m/s
+angle: 79.0 deg 
+speed: 9.72 m/s
 
 distance: 2.9 m 
-angle: 77.5 deg 
-speed: 9.36 m/s
+angle: 78.0 deg 
+speed: 9.49 m/s
 
 distance: 3.0 m 
-angle: 77.5 deg 
-speed: 9.49 m/s
+angle: 78.0 deg 
+speed: 9.62 m/s
 
 distance: 3.1 m 
 angle: 77.5 deg 
-speed: 9.61 m/s
+speed: 9.57 m/s
 
 distance: 3.2 m 
 angle: 77.5 deg 
-speed: 9.73 m/s
+speed: 9.69 m/s
 
 distance: 3.3 m 
 angle: 77.5 deg 
-speed: 9.84 m/s
+speed: 9.81 m/s
 
 distance: 3.4 m 
-angle: 77.5 deg 
-speed: 9.96 m/s
+angle: 76.5 deg 
+speed: 9.61 m/s
 
 distance: 3.5 m 
-angle: 77.0 deg 
-speed: 9.91 m/s
-
-distance: 3.6 m 
-angle: 76.0 deg 
+angle: 76.5 deg 
 speed: 9.72 m/s
 
+distance: 3.6 m 
+angle: 76.5 deg 
+speed: 9.83 m/s
+
 distance: 3.7 m 
-angle: 76.0 deg 
-speed: 9.82 m/s
+angle: 76.5 deg 
+speed: 9.94 m/s
 
 distance: 3.8 m 
 angle: 76.0 deg 
-speed: 9.93 m/s
+speed: 9.82 m/s
 
 distance: 3.9 m 
 angle: 76.0 deg 
-speed: 10.03 m/s
+speed: 9.92 m/s
 
 distance: 4.0 m 
 angle: 75.5 deg 
-speed: 9.99 m/s
+speed: 9.88 m/s
 
 distance: 4.1 m 
 angle: 75.5 deg 
-speed: 10.09 m/s
+speed: 9.98 m/s
 
 distance: 4.2 m 
 angle: 75.5 deg 
-speed: 10.12 m/s
+speed: 10.08 m/s
 
 distance: 4.3 m 
 angle: 74.5 deg 
-speed: 9.94 m/s
+speed: 9.91 m/s
 
 distance: 4.4 m 
 angle: 74.5 deg 
-speed: 10.03 m/s
-
-distance: 4.5 m 
-angle: 74.0 deg 
 speed: 10.0 m/s
 
+distance: 4.5 m 
+angle: 74.5 deg 
+speed: 10.1 m/s
+
 distance: 4.6 m 
-angle: 74.0 deg 
-speed: 10.09 m/s
+angle: 74.5 deg 
+speed: 10.19 m/s
 
 distance: 4.7 m 
 angle: 74.0 deg 
-speed: 10.18 m/s
+speed: 10.15 m/s
 
 distance: 4.8 m 
 angle: 74.0 deg 
-speed: 10.27 m/s
+speed: 10.24 m/s
 
 distance: 4.9 m 
 angle: 73.5 deg 
-speed: 10.23 m/s
+speed: 10.2 m/s
 
 distance: 5.0 m 
-angle: 73.5 deg 
-speed: 10.32 m/s
+angle: 73.0 deg 
+speed: 10.17 m/s
 
 distance: 5.1 m 
 angle: 73.0 deg 
-speed: 10.29 m/s
+speed: 10.25 m/s
 
 distance: 5.2 m 
-angle: 73.0 deg 
-speed: 10.37 m/s
+angle: 72.5 deg 
+speed: 10.22 m/s
 
 distance: 5.3 m 
 angle: 72.5 deg 
-speed: 10.33 m/s
-
-distance: 5.4 m 
-angle: 72.0 deg 
 speed: 10.3 m/s
 
-distance: 5.5 m 
-angle: 72.0 deg 
+distance: 5.4 m 
+angle: 72.5 deg 
 speed: 10.38 m/s
 
+distance: 5.5 m 
+angle: 72.5 deg 
+speed: 10.47 m/s
+
 distance: 5.6 m 
-angle: 71.5 deg 
-speed: 10.35 m/s
+angle: 72.0 deg 
+speed: 10.43 m/s
 
 distance: 5.7 m 
-angle: 71.5 deg 
-speed: 10.43 m/s
+angle: 72.0 deg 
+speed: 10.51 m/s
 
 distance: 5.8 m 
 angle: 71.0 deg 
-speed: 10.4 m/s
+speed: 10.37 m/s
 
 distance: 5.9 m 
 angle: 71.0 deg 
-speed: 10.48 m/s
+speed: 10.44 m/s
 
 distance: 6.0 m 
 angle: 71.0 deg 
-speed: 10.55 m/s
-angle vs distance: 0.06819563819722342x^2+-3.0312156212267225x+86.57708128244042
-velocity vs distance: -0.03970191850324918x^2+0.6023478186630093x+8.241406861728594
+speed: 10.52 m/s
+angle vs distance: 0.0030142681165330827x^2+-2.4717786098474197x+85.55874982794282
+velocity vs distance: -0.06857791011905315x^2+0.8515747825980705x+7.724035484730785

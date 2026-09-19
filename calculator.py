@@ -33,7 +33,7 @@ back_clearance = 0.15
 top_clearance = 0.16
 
 # m (not sure what this is yet, have to change)
-shooter_height = 0.4
+shooter_height = 0.508
 
 # +/- x m/s
 velocity_uncertainty = 0.1
